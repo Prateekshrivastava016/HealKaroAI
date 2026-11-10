@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getUserProfile } from "../services/authService";
 import api from "../services/api";
+import "./Profile.css";
 
 const initialForm = {
   name: "",
@@ -15,31 +17,22 @@ const initialForm = {
 
 function Profile() {
   const navigate = useNavigate();
-
   const [user, setUser] = useState(null);
   const [form, setForm] = useState(initialForm);
-
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  // Load logged-in user's profile
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         setLoading(true);
         setError("");
 
-        // Existing authentication endpoint
-        const response = await api.get("/auth/me");
-
-        const userData =
-          response.data?.user ||
-          response.data?.data ||
-          response.data;
+        const response = await getUserProfile();
+        const userData = response?.user || response?.data || response;
 
         if (!userData || typeof userData !== "object") {
           throw new Error("Invalid profile response");
@@ -58,7 +51,6 @@ function Profile() {
         });
       } catch (err) {
         console.error("Profile loading error:", err);
-
         setError(
           err.response?.data?.message ||
             err.message ||
@@ -72,7 +64,6 @@ function Profile() {
     fetchProfile();
   }, []);
 
-  // Calculate BMI
   const calculateBMI = () => {
     const height = Number(user?.height);
     const weight = Number(user?.weight);
@@ -81,13 +72,13 @@ function Profile() {
       return null;
     }
 
-    return (weight / Math.pow(height / 100, 2)).toFixed(1);
+    return Number((weight / Math.pow(height / 100, 2)).toFixed(1));
   };
 
   const getBMIStatus = (bmi) => {
     if (bmi === null) return "Not available";
     if (bmi < 18.5) return "Underweight";
-    if (bmi < 25) return "Normal weight";
+    if (bmi < 25) return "Healthy range";
     if (bmi < 30) return "Overweight";
     return "Obesity range";
   };
@@ -112,17 +103,11 @@ function Profile() {
     return `${value}${suffix}`;
   };
 
-  // Update form fields
   const handleChange = (event) => {
     const { name, value } = event.target;
-
-    setForm((previous) => ({
-      ...previous,
-      [name]: value,
-    }));
+    setForm((previous) => ({ ...previous, [name]: value }));
   };
 
-  // Start editing
   const handleEdit = () => {
     setForm({
       name: user.name ?? "",
@@ -134,13 +119,11 @@ function Profile() {
       goal: user.goal ?? "",
       dietaryPreference: user.dietaryPreference ?? "",
     });
-
     setError("");
     setSuccess("");
     setIsEditing(true);
   };
 
-  // Cancel editing
   const handleCancel = () => {
     setForm({
       name: user.name ?? "",
@@ -152,18 +135,13 @@ function Profile() {
       goal: user.goal ?? "",
       dietaryPreference: user.dietaryPreference ?? "",
     });
-
     setError("");
     setSuccess("");
     setIsEditing(false);
   };
 
-  // Save updated profile
   const handleSave = async (event) => {
     event.preventDefault();
-
-   alert("Save button clicked!");
-
     setError("");
     setSuccess("");
 
@@ -203,8 +181,7 @@ function Profile() {
 
     try {
       setSaving(true);
-
-      const payload = {
+      const response = await api.put("/profile", {
         name: form.name.trim(),
         age,
         height,
@@ -213,15 +190,9 @@ function Profile() {
         activityLevel: form.activityLevel,
         goal: form.goal,
         dietaryPreference: form.dietaryPreference,
-      };
+      });
 
-      // Authenticated PUT request
-      const response = await api.put("/profile", payload);
-
-      const updatedUser =
-        response.data?.data ||
-        response.data?.user;
-
+      const updatedUser = response.data?.data || response.data?.user;
       if (!updatedUser) {
         throw new Error(
           "Profile may have been saved, but the updated details were not returned."
@@ -229,7 +200,6 @@ function Profile() {
       }
 
       setUser(updatedUser);
-
       setForm({
         name: updatedUser.name ?? "",
         age: updatedUser.age ?? "",
@@ -240,12 +210,10 @@ function Profile() {
         goal: updatedUser.goal ?? "",
         dietaryPreference: updatedUser.dietaryPreference ?? "",
       });
-
       setIsEditing(false);
       setSuccess("Profile updated successfully!");
     } catch (err) {
       console.error("Profile update error:", err);
-
       setError(
         err.response?.data?.message ||
           err.message ||
@@ -256,365 +224,167 @@ function Profile() {
     }
   };
 
-  const styles = {
-    page: {
-      minHeight: "100vh",
-      background: "#f4f7f6",
-      padding: "30px 16px",
-      fontFamily: "Arial, sans-serif",
-      boxSizing: "border-box",
-      color: "#18352c",
-    },
-    container: {
-      maxWidth: "1000px",
-      margin: "0 auto",
-    },
-    topBar: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      gap: "12px",
-      flexWrap: "wrap",
-      marginBottom: "28px",
-    },
-    brand: {
-      fontSize: "24px",
-      fontWeight: "800",
-      color: "#167d57",
-      margin: 0,
-    },
-    button: {
-      padding: "11px 18px",
-      border: "1px solid #d5e5dc",
-      borderRadius: "10px",
-      background: "#ffffff",
-      color: "#167d57",
-      fontWeight: "600",
-      cursor: "pointer",
-    },
-    primaryButton: {
-      padding: "12px 20px",
-      border: "none",
-      borderRadius: "10px",
-      background: "#167d57",
-      color: "#ffffff",
-      fontWeight: "700",
-      cursor: "pointer",
-    },
-    heading: {
-      fontSize: "30px",
-      margin: "0 0 8px",
-    },
-    subtitle: {
-      color: "#718078",
-      margin: "0 0 25px",
-      lineHeight: 1.6,
-    },
-    card: {
-      background: "#ffffff",
-      borderRadius: "18px",
-      padding: "24px",
-      marginBottom: "22px",
-      boxShadow: "0 5px 25px rgba(20, 70, 50, 0.06)",
-      border: "1px solid #e7eee9",
-      boxSizing: "border-box",
-    },
-    profileHeader: {
-      display: "flex",
-      alignItems: "center",
-      gap: "20px",
-      flexWrap: "wrap",
-    },
-    avatar: {
-      width: "85px",
-      height: "85px",
-      borderRadius: "50%",
-      background: "linear-gradient(135deg, #16865d, #72c9a3)",
-      color: "#ffffff",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      fontSize: "28px",
-      fontWeight: "800",
-      flexShrink: 0,
-    },
-    userName: {
-      fontSize: "24px",
-      margin: "0 0 7px",
-      overflowWrap: "anywhere",
-    },
-    email: {
-      color: "#718078",
-      margin: 0,
-      overflowWrap: "anywhere",
-    },
-    badge: {
-      display: "inline-block",
-      background: "#e7f7ee",
-      color: "#167d57",
-      padding: "7px 12px",
-      borderRadius: "20px",
-      fontSize: "12px",
-      fontWeight: "700",
-      marginTop: "12px",
-    },
-    sectionTitle: {
-      fontSize: "20px",
-      margin: "0 0 20px",
-    },
-    grid: {
-      display: "grid",
-      gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
-      gap: "15px",
-    },
-    detailBox: {
-      padding: "17px",
-      background: "#f8fbf9",
-      border: "1px solid #e7eee9",
-      borderRadius: "13px",
-      minWidth: 0,
-    },
-    detailLabel: {
-      color: "#78867e",
-      fontSize: "13px",
-      marginBottom: "9px",
-    },
-    detailValue: {
-      color: "#203a30",
-      fontSize: "16px",
-      fontWeight: "700",
-      overflowWrap: "anywhere",
-    },
-    inputGroup: {
-      display: "flex",
-      flexDirection: "column",
-      gap: "8px",
-      minWidth: 0,
-    },
-    label: {
-      fontSize: "13px",
-      color: "#52665b",
-      fontWeight: "700",
-    },
-    input: {
-      width: "100%",
-      minWidth: 0,
-      boxSizing: "border-box",
-      padding: "12px",
-      border: "1px solid #d5e5dc",
-      borderRadius: "9px",
-      background: "#ffffff",
-      color: "#18352c",
-      fontSize: "14px",
-      outlineColor: "#167d57",
-    },
-    bmiValue: {
-      fontSize: "36px",
-      fontWeight: "800",
-      color: "#167d57",
-      margin: "12px 0 6px",
-    },
-    message: {
-      textAlign: "center",
-      padding: "40px 20px",
-      background: "#ffffff",
-      borderRadius: "16px",
-      color: "#52665b",
-      lineHeight: 1.7,
-    },
-  };
+  const detailItems = user
+    ? [
+        { label: "Age", value: formatValue(user.age, " years"), icon: "🎂" },
+        { label: "Gender", value: formatValue(user.gender), icon: "👤" },
+        { label: "Height", value: formatValue(user.height, " cm"), icon: "📏" },
+        { label: "Weight", value: formatValue(user.weight, " kg"), icon: "⚖️" },
+        {
+          label: "Activity Level",
+          value: formatValue(user.activityLevel),
+          icon: "🏃",
+        },
+        { label: "Fitness Goal", value: formatValue(user.goal), icon: "🎯" },
+        {
+          label: "Dietary Preference",
+          value: formatValue(user.dietaryPreference),
+          icon: "🥗",
+        },
+      ]
+    : [];
+
+  const bmi = calculateBMI();
+  const bmiTone =
+    bmi === null
+      ? "tone-none"
+      : bmi < 18.5
+        ? "tone-under"
+        : bmi < 25
+          ? "tone-normal"
+          : bmi < 30
+            ? "tone-over"
+            : "tone-obese";
+  const bmiMarker = bmi === null ? 0 : Math.min(Math.max((bmi / 40) * 100, 0), 100);
 
   if (loading) {
     return (
-      <div style={styles.page}>
-        <div style={styles.container}>
-          <div style={styles.message}>
+      <div className="profile-page">
+        <main className="profile-container">
+          <div className="profile-message" role="status">
+            <div className="spinner" />
             <h2>Loading your profile...</h2>
             <p>Please wait while we fetch your details.</p>
           </div>
-        </div>
+        </main>
       </div>
     );
   }
 
   if (error && !user) {
     return (
-      <div style={styles.page}>
-        <div style={styles.container}>
-          <div style={styles.message}>
-            <h2>Unable to Load Profile</h2>
+      <div className="profile-page">
+        <main className="profile-container">
+          <div className="profile-message">
+            <div className="message-icon" aria-hidden="true">!</div>
+            <h2>Unable to load profile</h2>
             <p>{error}</p>
-
-            <button
-              style={styles.button}
-              onClick={() => navigate("/dashboard")}
-            >
-              Back to Dashboard
-            </button>
-
-            <button
-              style={{ ...styles.primaryButton, marginLeft: "10px" }}
-              onClick={() => navigate("/login")}
-            >
-              Go to Login
-            </button>
+            <div className="message-actions">
+              <button
+                className="btn btn-ghost"
+                onClick={() => navigate("/dashboard")}
+              >
+                Back to Dashboard
+              </button>
+              <button
+                className="btn btn-primary"
+                onClick={() => navigate("/login")}
+              >
+                Go to Login
+              </button>
+            </div>
           </div>
-        </div>
+        </main>
       </div>
     );
   }
 
   if (!user) return null;
 
-  const bmi = calculateBMI();
-
-  const detailItems = [
-    { label: "Age", value: formatValue(user.age, " years"), icon: "🎂" },
-    { label: "Gender", value: formatValue(user.gender), icon: "👤" },
-    { label: "Height", value: formatValue(user.height, " cm"), icon: "📏" },
-    { label: "Weight", value: formatValue(user.weight, " kg"), icon: "⚖️" },
-    {
-      label: "Activity Level",
-      value: formatValue(user.activityLevel),
-      icon: "🏃",
-    },
-    { label: "Fitness Goal", value: formatValue(user.goal), icon: "🎯" },
-    {
-      label: "Dietary Preference",
-      value: formatValue(user.dietaryPreference),
-      icon: "🥗",
-    },
-  ];
-
   return (
-    <div style={styles.page}>
-      <div style={styles.container}>
-        <div style={styles.topBar}>
-          <h2 style={styles.brand}>HealKaroAI</h2>
+    <div className="profile-page">
+      <header className="profile-topbar">
+        <h2 className="profile-brand">
+          <span className="brand-mark" aria-hidden="true">✦</span>
+          <span>HealKaroAI</span>
+        </h2>
+        <button
+          className="btn btn-ghost"
+          onClick={() => navigate("/dashboard")}
+        >
+          ← Back to Dashboard
+        </button>
+      </header>
 
-          <button
-            style={styles.button}
-            onClick={() => navigate("/dashboard")}
-          >
-            ← Back to Dashboard
-          </button>
-        </div>
-
-        <h1 style={styles.heading}>My Profile</h1>
-
-        <p style={styles.subtitle}>
+      <main className="profile-container">
+        <h1 className="profile-heading">My Profile</h1>
+        <p className="profile-subtitle">
           Manage your personal information and view your health details.
         </p>
 
         {error && (
-          <div
-            role="alert"
-            style={{
-              padding: "13px 16px",
-              borderRadius: "10px",
-              background: "#fff0ef",
-              color: "#a52b24",
-              marginBottom: "18px",
-            }}
-          >
+          <div className="alert alert-error" role="alert">
             {error}
           </div>
         )}
-
         {success && (
-          <div
-            role="status"
-            style={{
-              padding: "13px 16px",
-              borderRadius: "10px",
-              background: "#e7f7ee",
-              color: "#167d57",
-              marginBottom: "18px",
-            }}
-          >
+          <div className="alert alert-success" role="status">
             ✓ {success}
           </div>
         )}
 
-        {/* User header */}
-        <section style={styles.card}>
-          <div style={styles.profileHeader}>
-            <div style={styles.avatar}>
-              {getInitials(user.name)}
-            </div>
-
-            <div style={{ minWidth: 0, flex: 1 }}>
-              <h2 style={styles.userName}>
-                {user.name || "HealKaroAI User"}
-              </h2>
-
-              <p style={styles.email}>
-                {user.email || "Email not provided"}
-              </p>
-
-              <span style={styles.badge}>✓ Registered User</span>
-            </div>
-
-            {!isEditing && (
-              <button
-                style={styles.primaryButton}
-                onClick={handleEdit}
-              >
-                ✏️ Edit Profile
-              </button>
-            )}
+        <section className="profile-hero">
+          <div className="avatar" aria-hidden="true">
+            {getInitials(user.name)}
           </div>
+          <div className="hero-text">
+            <h2>{user.name || "HealKaroAI User"}</h2>
+            <p>{user.email || "Email not provided"}</p>
+            <span className="badge">✓ Registered User</span>
+          </div>
+          {!isEditing && (
+            <button className="btn btn-light" onClick={handleEdit}>
+              ✏️ Edit Profile
+            </button>
+          )}
         </section>
 
-        {/* Edit form */}
         {isEditing ? (
-          <section style={styles.card}>
-            <h2 style={styles.sectionTitle}>
-              ✏️ Edit Personal & Health Information
+          <section className="card">
+            <h2 className="section-title">
+              ✏️ Edit Personal &amp; Health Information
             </h2>
-
             <form onSubmit={handleSave}>
-              <div style={styles.grid}>
-                <div style={styles.inputGroup}>
-                  <label style={styles.label} htmlFor="name">
-                    Full Name
-                  </label>
+              <div className="form-grid">
+                <div className="field">
+                  <label htmlFor="name">Full Name</label>
                   <input
                     id="name"
                     name="name"
-                    style={styles.input}
                     value={form.name}
                     onChange={handleChange}
                     required
                     maxLength={100}
                   />
                 </div>
-
-                <div style={styles.inputGroup}>
-                  <label style={styles.label} htmlFor="age">
-                    Age
-                  </label>
+                <div className="field">
+                  <label htmlFor="age">Age</label>
                   <input
                     id="age"
                     name="age"
                     type="number"
                     min="1"
                     max="120"
-                    style={styles.input}
                     value={form.age}
                     onChange={handleChange}
                     required
                   />
                 </div>
-
-                <div style={styles.inputGroup}>
-                  <label style={styles.label} htmlFor="gender">
-                    Gender
-                  </label>
+                <div className="field">
+                  <label htmlFor="gender">Gender</label>
                   <select
                     id="gender"
                     name="gender"
-                    style={styles.input}
                     value={form.gender}
                     onChange={handleChange}
                   >
@@ -624,11 +394,8 @@ function Profile() {
                     <option value="other">Other</option>
                   </select>
                 </div>
-
-                <div style={styles.inputGroup}>
-                  <label style={styles.label} htmlFor="height">
-                    Height (cm)
-                  </label>
+                <div className="field">
+                  <label htmlFor="height">Height (cm)</label>
                   <input
                     id="height"
                     name="height"
@@ -636,17 +403,13 @@ function Profile() {
                     min="1"
                     max="300"
                     step="0.1"
-                    style={styles.input}
                     value={form.height}
                     onChange={handleChange}
                     required
                   />
                 </div>
-
-                <div style={styles.inputGroup}>
-                  <label style={styles.label} htmlFor="weight">
-                    Weight (kg)
-                  </label>
+                <div className="field">
+                  <label htmlFor="weight">Weight (kg)</label>
                   <input
                     id="weight"
                     name="weight"
@@ -654,21 +417,16 @@ function Profile() {
                     min="0.1"
                     max="700"
                     step="0.1"
-                    style={styles.input}
                     value={form.weight}
                     onChange={handleChange}
                     required
                   />
                 </div>
-
-                <div style={styles.inputGroup}>
-                  <label style={styles.label} htmlFor="activityLevel">
-                    Activity Level
-                  </label>
+                <div className="field">
+                  <label htmlFor="activityLevel">Activity Level</label>
                   <select
                     id="activityLevel"
                     name="activityLevel"
-                    style={styles.input}
                     value={form.activityLevel}
                     onChange={handleChange}
                   >
@@ -682,15 +440,11 @@ function Profile() {
                     <option value="extra_active">Extra Active</option>
                   </select>
                 </div>
-
-                <div style={styles.inputGroup}>
-                  <label style={styles.label} htmlFor="goal">
-                    Fitness Goal
-                  </label>
+                <div className="field">
+                  <label htmlFor="goal">Fitness Goal</label>
                   <select
                     id="goal"
                     name="goal"
-                    style={styles.input}
                     value={form.goal}
                     onChange={handleChange}
                   >
@@ -702,15 +456,11 @@ function Profile() {
                     <option value="improve_fitness">Improve Fitness</option>
                   </select>
                 </div>
-
-                <div style={styles.inputGroup}>
-                  <label style={styles.label} htmlFor="dietaryPreference">
-                    Dietary Preference
-                  </label>
+                <div className="field">
+                  <label htmlFor="dietaryPreference">Dietary Preference</label>
                   <select
                     id="dietaryPreference"
                     name="dietaryPreference"
-                    style={styles.input}
                     value={form.dietaryPreference}
                     onChange={handleChange}
                   >
@@ -722,30 +472,13 @@ function Profile() {
                   </select>
                 </div>
               </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  gap: "12px",
-                  flexWrap: "wrap",
-                  marginTop: "24px",
-                }}
-              >
-                <button
-                  type="submit"
-                  onClick={() => alert("Save button clicked!")}
-                  style={{
-                   ...styles.primaryButton,
-                  opacity: saving ? 0.7 : 1,
-                   }}
-                   disabled={saving}
->
+              <div className="form-actions">
+                <button className="btn btn-primary" type="submit" disabled={saving}>
                   {saving ? "Saving..." : "💾 Save Changes"}
                 </button>
-
                 <button
+                  className="btn btn-ghost"
                   type="button"
-                  style={styles.button}
                   onClick={handleCancel}
                   disabled={saving}
                 >
@@ -755,64 +488,62 @@ function Profile() {
             </form>
           </section>
         ) : (
-          <>
-            {/* Personal details */}
-            <section style={styles.card}>
-              <h2 style={styles.sectionTitle}>
-                👤 Personal & Health Information
+          <div className="profile-layout">
+            <section className="card">
+              <h2 className="section-title">
+                👤 Personal &amp; Health Information
               </h2>
-
-              <div style={styles.grid}>
+              <div className="detail-grid">
                 {detailItems.map((item) => (
-                  <div key={item.label} style={styles.detailBox}>
-                    <div style={styles.detailLabel}>
-                      {item.icon} {item.label}
-                    </div>
-
-                    <div style={styles.detailValue}>
-                      {item.value}
+                  <div className="detail-box" key={item.label}>
+                    <span className="detail-icon" aria-hidden="true">
+                      {item.icon}
+                    </span>
+                    <div>
+                      <div className="detail-label">{item.label}</div>
+                      <div className="detail-value">{item.value}</div>
                     </div>
                   </div>
                 ))}
               </div>
             </section>
 
-            {/* BMI */}
-            <section style={styles.card}>
-              <h2 style={styles.sectionTitle}>
-                📊 Body Mass Index (BMI)
-              </h2>
-
-              <p style={{ color: "#718078", margin: 0 }}>
-                BMI is calculated from your recorded height and weight.
+            <section className="card bmi-card">
+              <h2 className="section-title">📊 Body Mass Index</h2>
+              <p className="muted">
+                Calculated from your recorded height and weight.
               </p>
-
-              <div style={styles.bmiValue}>{bmi || "--"}</div>
-
-              <p style={{ margin: 0, fontWeight: "600" }}>
-                {getBMIStatus(bmi === null ? null : Number(bmi))}
-              </p>
-
-              {!bmi && (
-                <p style={{ color: "#718078", fontSize: "13px" }}>
-                  Add valid height and weight details to calculate BMI.
+              <div className="bmi-value">{bmi ?? "--"}</div>
+              <span className={`bmi-status ${bmiTone}`}>
+                {getBMIStatus(bmi)}
+              </span>
+              {bmi === null ? (
+                <p className="muted small">
+                  Add valid height and weight details to calculate your BMI.
                 </p>
+              ) : (
+                <div className="bmi-scale" aria-label="BMI scale">
+                  <div className="bmi-track">
+                    <span
+                      className="bmi-marker"
+                      style={{ left: `${bmiMarker}%` }}
+                    />
+                  </div>
+                  <div className="bmi-legend">
+                    <span>Low</span>
+                    <span>Healthy</span>
+                    <span>High</span>
+                  </div>
+                </div>
               )}
             </section>
-          </>
+          </div>
         )}
 
-        <p
-          style={{
-            textAlign: "center",
-            color: "#89958e",
-            fontSize: "13px",
-            padding: "10px 0",
-          }}
-        >
+        <footer className="profile-footer">
           HealKaroAI · AI-Powered Personal Health Monitoring System
-        </p>
-      </div>
+        </footer>
+      </main>
     </div>
   );
 }

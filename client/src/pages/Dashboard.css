@@ -1,5 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap");
-
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap");
 .dashboard-layout {
   min-height: 100vh;
   display: flex;
@@ -970,4 +969,74 @@
     font-size: 13px;
     line-height: 1.8;
   }
+}
+/* Modern Dashboard Typography */
+
+.dashboard-layout {
+  font-family: "DM Sans", sans-serif;
+  letter-spacing: -0.2px;
+}
+
+.dashboard-header h1,
+.welcome-banner h2,
+.section-heading h2,
+.goals-section h2,
+.health-card-value,
+.analytics-card h3,
+.food-tracker h2,
+.exercise-tracker h2,
+.weight-tracker h2 {
+  font-family: "Outfit", sans-serif;
+  letter-spacing: -0.7px;
+}
+
+.dashboard-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.welcome-banner h2 {
+  font-size: 27px;
+  font-weight: 700;
+}
+
+.health-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.health-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 28px rgba(20, 65, 45, 0.09);
+}
+
+.feature-card,
+.analytics-card,
+.goals-section {
+  transition: box-shadow 0.25s ease;
+}
+
+/* Center Generate Workout Plan Button */
+
+/* Workout Form Button Alignment */
+
+.diet-form-grid button[type="submit"] {
+  grid-column: 1 / -1;
+  justify-self: center;
+  display: block;
+  width: 220px;
+  margin: 15px 0;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 10px;
+  background: #198754;
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.diet-form-grid button[type="submit"]:hover {
+  background: #126b3d;
+  transform: translateY(-2px);
 }

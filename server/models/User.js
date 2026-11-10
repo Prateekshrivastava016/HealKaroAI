@@ -66,13 +66,13 @@ const userSchema = new mongoose.Schema(
 
     goal: {
       type: String,
-      required: true,
       enum: [
-        "weight_loss",
-        "weight_gain",
+        "gain_weight",
+        "lose_weight",
         "maintain_weight",
         "muscle_gain",
       ],
+      default: "maintain_weight",
     },
 
     dietaryPreference: {

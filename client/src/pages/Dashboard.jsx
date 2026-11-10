@@ -682,19 +682,19 @@ const handleGenerateWorkoutPlan = async (e) => {
 
         <nav className="dashboard-nav">
           <Link to="/dashboard" className="nav-item active">
-            🏠 Dashboard
+             Dashboard
           </Link>
 
           <Link to="/profile" className="nav-item">
-            👤 My Profile
+              My Profile
           </Link>
 
           <a href="#health-overview" className="nav-item">
-            ❤️ Health Overview
+             Health Overview
           </a>
 
           <a href="#daily-goals" className="nav-item">
-            🎯 Daily Goals
+             Daily Goals
           </a>
         </nav>
 
@@ -752,32 +752,32 @@ const handleGenerateWorkoutPlan = async (e) => {
             <h2>Your Profile Overview</h2>
 
             <div className="goal-row">
-              <span>👤 Name</span>
+              <span> Name </span>
               <span>{user.name || "Not provided"}</span>
             </div>
 
             <div className="goal-row">
-              <span>📧 Email</span>
+              <span> Email </span>
               <span>{user.email || "Not provided"}</span>
             </div>
 
             <div className="goal-row">
-              <span>🎂 Age</span>
+              <span> Age </span>
               <span>{user.age ? `${user.age} years` : "Not provided"}</span>
             </div>
 
             <div className="goal-row">
-              <span>⚧️ Gender</span>
+              <span> Gender </span>
               <span>{user.gender || "Not provided"}</span>
             </div>
 
             <div className="goal-row">
-              <span>📏 Height</span>
+              <span> Height </span>
               <span>{height > 0 ? `${height} cm` : "Not provided"}</span>
             </div>
 
             <div className="goal-row">
-              <span>⚖️ Weight</span>
+              <span> Weight </span>
               <span>{weight > 0 ? `${weight} kg` : "Not provided"}</span>
             </div>
           </section>
@@ -815,14 +815,14 @@ const handleGenerateWorkoutPlan = async (e) => {
 <section className="analytics-section">
   <div className="section-heading">
     <div>
-      <h2>📊 Health Analytics</h2>
+      <h2> Health Analytics </h2>
       <p>Your current health progress at a glance</p>
     </div>
   </div>
 
   {/* BMI Analytics */}
   <div className="analytics-card">
-    <h3>⚖️ BMI Analysis</h3>
+    <h3> BMI Analysis </h3>
 
     <div className="analytics-highlight">
       <span className="analytics-number">{bmi}</span>
@@ -840,7 +840,7 @@ const handleGenerateWorkoutPlan = async (e) => {
 
   {/* Water Analytics */}
   <div className="analytics-card">
-    <h3>💧 Water Intake</h3>
+    <h3> Water Intake </h3>
 
     <div className="analytics-highlight">
       <span className="analytics-number">
@@ -871,7 +871,7 @@ const handleGenerateWorkoutPlan = async (e) => {
 
   {/* Sleep Analytics */}
   <div className="analytics-card">
-    <h3>😴 Sleep Analysis</h3>
+    <h3>Sleep Analysis </h3>
 
     <div className="analytics-highlight">
       <span className="analytics-number">
@@ -903,14 +903,14 @@ const handleGenerateWorkoutPlan = async (e) => {
 
         {/* Water Intake Tracker */}
 <section className="goals-section">
-  <h2>💧 Water Intake Tracker</h2>
+  <h2> Water Intake Tracker </h2>
   <p>Track how much water you drink today.</p>
 
   <div className="goal-row">
     <span>Today's Intake</span>
     <div className="water-progress-section">
   <div className="water-progress-info">
-    <span>🎯 Daily Water Goal</span>
+    <span> Daily Water Goal </span>
     <strong>2500 ml</strong>
   </div>
 
@@ -956,7 +956,7 @@ const handleGenerateWorkoutPlan = async (e) => {
 </section>
 {/* Sleep Tracker */}
 <section className="goals-section" id="sleep-tracker">
-  <h2>😴 Sleep Tracker</h2>
+  <h2> Sleep Tracker </h2>
   <p>Track your sleep schedule and daily rest.</p>
 
   <div className="goal-row">
@@ -994,13 +994,13 @@ const handleGenerateWorkoutPlan = async (e) => {
   )}
 
   <div className="goal-row">
-    <span>⏱️ Total Sleep</span>
+    <span>Total Sleep </span>
     <strong>{sleepDuration} hours</strong>
   </div>
 
   <div className="water-progress-section">
     <div className="water-progress-info">
-      <span>🎯 Daily Sleep Goal</span>
+      <span> Daily Sleep Goal </span>
       <strong>8 hours</strong>
     </div>
 
@@ -1021,7 +1021,7 @@ const handleGenerateWorkoutPlan = async (e) => {
 {/* Food Tracker */}
 <section className="food-tracker">
   <div className="section-heading">
-    <h2>🍎 Food Tracker</h2>
+    <h2> Food Tracker </h2>
     <p>Track your daily food and nutrition intake.</p>
   </div>
 
@@ -1168,7 +1168,7 @@ const handleGenerateWorkoutPlan = async (e) => {
 
 {/* Meal-wise Nutrition Summary */}
 <div className="meal-summary">
-  <h3>🍽️ Meal-wise Nutrition Summary</h3>
+  <h3> Meal-wise Nutrition Summary </h3>
 
   <div className="meal-summary-grid">
     {mealSummary.map((meal) => (
@@ -1217,7 +1217,7 @@ const handleGenerateWorkoutPlan = async (e) => {
 {/* Exercise Tracker */}
 <section className="exercise-tracker">
   <div className="section-heading">
-    <h2>🏋️ Exercise Tracker</h2>
+    <h2> Exercise Tracker </h2>
     <p>Track your daily workouts and calories burned.</p>
   </div>
 
@@ -1327,7 +1327,7 @@ const handleGenerateWorkoutPlan = async (e) => {
 {/* Weight Tracker */}
 <section className="weight-tracker">
   <div className="section-heading">
-    <h2>⚖️ Weight Tracker</h2>
+    <h2> Weight Tracker </h2>
     <p>Track your daily weight and monitor your progress.</p>
   </div>
 
@@ -1380,7 +1380,7 @@ const handleGenerateWorkoutPlan = async (e) => {
        <section id="daily-goals" className="goals-section">
   <div className="section-heading">
     <div>
-      <h2>🎯 Daily Health Goals</h2>
+      <h2> Daily Health Goals </h2>
       <p>Track your progress using your recorded health data.</p>
     </div>
 
@@ -1418,7 +1418,7 @@ const handleGenerateWorkoutPlan = async (e) => {
 
 {/* AI Diet Assistant */}
 <section className="tracker-section ai-diet-section">
-  <h2>🤖 AI Diet Assistant</h2>
+  <h2>AI Diet Assistant</h2>
   <p>Generate a personalized 7-day diet plan using Gemini AI.</p>
 
   <form onSubmit={handleGenerateDietPlan}>
@@ -1529,7 +1529,7 @@ const handleGenerateWorkoutPlan = async (e) => {
 </section>
 
 <section className="tracker-section ai-diet-section">
-  <h2>💪 AI Workout Assistant</h2>
+  <h2>AI Workout Assistant</h2>
   <p>Generate a workout plan based on your fitness goals.</p>
 
   <form onSubmit={handleGenerateWorkoutPlan} className="diet-form-grid">
@@ -1623,7 +1623,7 @@ const handleGenerateWorkoutPlan = async (e) => {
       ))}
     </select>
 
-    <button type="submit" disabled={workoutLoading}>
+    <button type="submit" disabled={workoutLoading} className="block mx-auto my-4">
       {workoutLoading ? "Generating..." : "Generate Workout Plan"}
     </button>
   </form>

@@ -1,0 +1,49 @@
+POST http://localhost:5000/api/exercise
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YWUxYzc3NDUyZWIwMTYyNGNhN2QzYTciLCJpYXQiOjE3OTMxODYyNTIsImV4cCI6MTc5Mzc5MTA1Mn0.j0FPfkCKKi2Mwo_RYZvFmRZW-nqP8SnnLChj5myatsI
+
+{
+  "exerciseName": "Walking",
+  "exerciseType": "Cardio",
+  "duration": 30,
+  "caloriesBurned": 120
+}
+### Get Today's Exercises
+GET http://localhost:5000/api/exercise
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YWUxYzc3NDUyZWIwMTYyNGNhN2QzYTciLCJpYXQiOjE3OTMxODYyNTIsImV4cCI6MTc5Mzc5MTA1Mn0.j0FPfkCKKi2Mwo_RYZvFmRZW-nqP8SnnLChj5myatsI
+
+### Delete Exercise
+DELETE http://localhost:5000/api/exercise/6ae7139e59fe7ea2dc593cb1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YWUxYzc3NDUyZWIwMTYyNGNhN2QzYTciLCJpYXQiOjE3OTMxODYyNTIsImV4cCI6MTc5Mzc5MTA1Mn0.j0FPfkCKKi2Mwo_RYZvFmRZW-nqP8SnnLChj5myatsI
+
+### AI Diet Plan
+POST http://localhost:5000/api/ai/diet-plan
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YWUxYzc3NDUyZWIwMTYyNGNhN2QzYTciLCJpYXQiOjE3OTMxODYyNTIsImV4cCI6MTc5Mzc5MTA1Mn0.j0FPfkCKKi2Mwo_RYZvFmRZW-nqP8SnnLChj5myatsI
+
+{
+  "age": 23,
+  "gender": "male",
+  "height": 175,
+  "weight": 60,
+  "activityLevel": "moderately_active",
+  "goal": "weight_gain",
+  "dietaryPreference": "vegetarian",
+  "dailyCalorieTarget": 2800
+}
+
+### AI Workout Plan
+POST http://localhost:5000/api/ai/workout-plan
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YWUxYzc3NDUyZWIwMTYyNGNhN2QzYTciLCJpYXQiOjE3OTMxODYyNTIsImV4cCI6MTc5Mzc5MTA1Mn0.j0FPfkCKKi2Mwo_RYZvFmRZW-nqP8SnnLChj5myatsI
+
+{
+  "age": 23,
+  "gender": "male",
+  "height": 183,
+  "weight": 65,
+  "fitnessLevel": "beginner",
+  "goal": "muscle_gain",
+  "workoutLocation": "home",
+  "availableDays": 5
+}
